@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Package, UtensilsCrossed, ShoppingCart, BarChart3, type LucideIcon } from "lucide-react";
+import { LayoutDashboard, Package, UtensilsCrossed, ShoppingCart, BarChart3, Users, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/lib/auth-store";
 import type { Role } from "@restaurant-inventory/shared";
@@ -20,6 +20,7 @@ export const NAV_ITEMS: NavItem[] = [
   { href: "/ingredients", label: "Ingredients", icon: Package, roles: ["ADMIN", "MANAGER", "STAFF"] },
   { href: "/menu", label: "Menu", icon: UtensilsCrossed, roles: ["ADMIN", "MANAGER", "STAFF"] },
   { href: "/reports", label: "Reports", icon: BarChart3, roles: ["ADMIN", "MANAGER"] },
+  { href: "/users", label: "Users", icon: Users, roles: ["ADMIN"] },
 ];
 
 export function Sidebar() {

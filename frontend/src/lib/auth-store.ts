@@ -8,6 +8,7 @@ export interface AuthUser {
   id: string;
   name: string;
   email: string;
+  phone?: string | null;
   role: Role;
   restaurantId: string;
 }
@@ -16,6 +17,7 @@ interface AuthState {
   token: string | null;
   user: AuthUser | null;
   setSession: (token: string, user: AuthUser) => void;
+  setUser: (user: AuthUser) => void;
   logout: () => void;
 }
 
@@ -41,6 +43,7 @@ export const useAuthStore = create<AuthState>()(
         setAuthedCookie(true);
         set({ token, user });
       },
+      setUser: (user) => set({ user }),
       logout: () => {
         setAuthedCookie(false);
         set({ token: null, user: null });

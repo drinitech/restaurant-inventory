@@ -12,6 +12,7 @@ import { recipesRouter } from "./modules/recipes/recipes.routes.js";
 import { stockMovementsRouter } from "./modules/stockMovements/stockMovements.routes.js";
 import { salesRouter } from "./modules/sales/sales.routes.js";
 import { reportsRouter } from "./modules/reports/reports.routes.js";
+import { usersRouter } from "./modules/users/users.routes.js";
 
 export function createApp() {
   const app = express();
@@ -25,13 +26,16 @@ export function createApp() {
 
   app.get("/health", (_req, res) => res.json({ status: "ok" }));
 
-  app.use("/auth", authLimiter, authRouter);
+  app.use("/auth/login", authLimiter);
+  app.use("/auth/register", authLimiter);
+  app.use("/auth", authRouter);
   app.use("/ingredients", ingredientsRouter);
   app.use("/menu-items", menuItemsRouter);
   app.use("/recipes", recipesRouter);
   app.use("/stock-movements", stockMovementsRouter);
   app.use("/sales", salesRouter);
   app.use("/reports", reportsRouter);
+  app.use("/users", usersRouter);
 
   app.use((req, res) => {
     res.status(404).json({ error: "NOT_FOUND", message: `No route for ${req.method} ${req.path}` });

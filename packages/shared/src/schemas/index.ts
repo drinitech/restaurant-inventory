@@ -6,3 +6,4 @@ export * from "./recipe.js";
 export * from "./stockMovement.js";
 export * from "./sale.js";
 export * from "./report.js";
+export * from "./user.js";

@@ -20,6 +20,9 @@ function toErrorShape(err: unknown): ErrorShape {
     if (err.code === "P2025") {
       return { status: 404, code: "NOT_FOUND", message: "Record not found" };
     }
+    if (err.code === "P2003") {
+      return { status: 409, code: "REFERENCED_RECORD", message: "This record is referenced by other data and cannot be deleted" };
+    }
   }
   if (
     typeof err === "object" &&
