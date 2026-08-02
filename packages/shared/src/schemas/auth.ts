@@ -6,7 +6,7 @@ export const RegisterSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8).max(72),
   role: RoleSchema,
-  restaurantId: z.string().cuid(),
+  restaurantId: z.string().min(1),
 });
 export type RegisterInput = z.infer<typeof RegisterSchema>;
 
