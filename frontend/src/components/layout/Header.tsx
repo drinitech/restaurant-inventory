@@ -5,7 +5,7 @@ import { useTheme } from "next-themes";
 import { LogOut, Moon, Sun, Menu as MenuIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { NotificationBell } from "./NotificationBell";
 import { useAuthStore } from "@/lib/auth-store";
@@ -52,13 +52,15 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
             }
           />
           <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel className="flex flex-col gap-1">
-              <span className="text-sm font-medium">{user?.name}</span>
-              <span className="text-xs font-normal text-muted-foreground">{user?.email}</span>
-              <Badge variant="secondary" className="mt-1 w-fit text-[10px]">
-                {user?.role}
-              </Badge>
-            </DropdownMenuLabel>
+            <DropdownMenuGroup>
+              <DropdownMenuLabel className="flex flex-col gap-1">
+                <span className="text-sm font-medium">{user?.name}</span>
+                <span className="text-xs font-normal text-muted-foreground">{user?.email}</span>
+                <Badge variant="secondary" className="mt-1 w-fit text-[10px]">
+                  {user?.role}
+                </Badge>
+              </DropdownMenuLabel>
+            </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
