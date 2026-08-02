@@ -1,0 +1,140 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  STAFF
+}
+
+enum Unit {
+  KG
+  G
+  L
+  ML
+  PIECE
+}
+
+enum MovementType {
+  IN
+  OUT
+  LOSS
+}
+
+model Restaurant {
+  id          String       @id @default(cuid())
+  name        String
+  address     String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  users       User[]
+  ingredients Ingredient[]
+  menuItems   MenuItem[]
+}
+
+model User {
+  id             String          @id @default(cuid())
+  name           String
+  email          String          @unique
+  passwordHash   String
+  role           Role            @default(STAFF)
+  restaurantId   String
+  restaurant     Restaurant      @relation(fields: [restaurantId], references: [id])
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  stockMovements StockMovement[]
+  sales          Sale[]
+
+  @@index([restaurantId])
+}
+
+model Ingredient {
+  id           String   @id @default(cuid())
+  name         String
+  unit         Unit
+  stockQty     Decimal  @default(0) @db.Decimal(12, 3)
+  costPerUnit  Decimal  @default(0) @db.Decimal(10, 2)
+  minThreshold Decimal  @default(0) @db.Decimal(12, 3)
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  recipes        Recipe[]
+  stockMovements StockMovement[]
+
+  @@unique([restaurantId, name])
+  @@index([restaurantId])
+  @@index([restaurantId, stockQty])
+}
+
+model MenuItem {
+  id           String   @id @default(cuid())
+  name         String
+  category     String
+  price        Decimal  @db.Decimal(10, 2)
+  active       Boolean  @default(true)
+  imageUrl     String?
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  recipes Recipe[]
+  sales   Sale[]
+
+  @@unique([restaurantId, name])
+  @@index([restaurantId, category])
+}
+
+model Recipe {
+  id           String @id @default(cuid())
+  menuItemId   String
+  ingredientId String
+  quantity     Decimal @db.Decimal(12, 3)
+
+  menuItem   MenuItem   @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Restrict)
+
+  @@unique([menuItemId, ingredientId])
+  @@index([ingredientId])
+}
+
+model StockMovement {
+  id            String       @id @default(cuid())
+  ingredientId  String
+  type          MovementType
+  quantity      Decimal      @db.Decimal(12, 3)
+  purchasePrice Decimal?     @db.Decimal(10, 2)
+  notes         String?
+  date          DateTime     @default(now())
+  userId        String
+
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id])
+  user       User       @relation(fields: [userId], references: [id])
+
+  @@index([ingredientId, date])
+  @@index([type])
+}
+
+model Sale {
+  id           String   @id @default(cuid())
+  menuItemId   String
+  quantity     Int
+  totalRevenue Decimal  @db.Decimal(10, 2)
+  date         DateTime @default(now())
+  userId       String
+
+  menuItem MenuItem @relation(fields: [menuItemId], references: [id])
+  user     User     @relation(fields: [userId], references: [id])
+
+  @@index([menuItemId, date])
+  @@index([date])
+}

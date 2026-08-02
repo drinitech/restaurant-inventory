@@ -1,0 +1,14 @@
+{
+  "name": "restaurant-inventory",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend",
+    "packages/shared"
+  ],
+  "scripts": {
+    "dev:backend": "npm run dev -w backend",
+    "dev:frontend": "npm run dev -w frontend",
+    "build:shared": "npm run build -w packages/shared"
+  }
+}
