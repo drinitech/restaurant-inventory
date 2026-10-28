@@ -1,0 +1,13 @@
+# Dev mode: backend/src is bind-mounted and the server restarts on every change.
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+# Back to the production image:  docker compose up -d --build
+# Changes to packages/shared, package.json or prisma/schema.prisma need a rebuild (--build).
+services:
+  backend:
+    image: restaurant-inventory-backend:dev
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+      target: dev
+    volumes:
+      - ./backend/src:/app/backend/src
